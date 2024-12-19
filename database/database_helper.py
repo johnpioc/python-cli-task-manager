@@ -32,7 +32,7 @@ def setup_database():
 # Get all tasks script
 get_all_tasks_script = """
     SELECT *
-    FROM tasks
+    FROM tasks;
 """
 
 def get_all_tasks():
@@ -42,3 +42,53 @@ def get_all_tasks():
     return tasks
 
 
+# Get task by ID script
+get_task_by_id_script = """
+    SELECT *
+    FROM tasks
+    WHERE id = ?
+"""
+
+def get_task_by_id(task_id):
+    con = sqlite3.connect("tasks.db")
+    cursor = con.cursor()
+    task = cursor.execute(get_task_by_id_script, (task_id,)).fetchone()
+    return task
+
+# Update task name script
+change_task_name_by_id_script = """
+    UPDATE tasks
+    SET task_name = ?
+    WHERE id = ?
+"""
+
+def update_task_name_by_id(task_id):
+    con = sqlite3.connect("tasks.db")
+    cursor = con.cursor()
+    updated_task = cursor.execute(change_task_name_by_id_script, (task_id,)).fetchone()
+    return updated_task
+
+# Toggle Task Completion Script
+toggle_task_completion_by_id_script = """
+    UPDATE tasks
+    SET is_complete = case @type when 1 then 0 else 1 end
+    WHERE id = ?
+"""
+
+def toggle_task_completion_by_id(task_id):
+    con = sqlite3.connect("tasks.db")
+    cursor = con.cursor()
+    updated_task = cursor.execute(toggle_task_completion_by_id_script, (task_id,)).fetchone()
+    return updated_task
+
+# Delete Task by ID script
+delete_task_by_id_script = """
+    DELETE FROM tasks
+    WHERE id = ?
+"""
+
+def delete_task_by_id(task_id):
+    con = sqlite3.connect("tasks.db")
+    cursor = con.cursor()
+    deleted_task = cursor.execute(delete_task_by_id_script, (task_id,)).fetchone()
+    return deleted_task
